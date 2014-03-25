@@ -10,10 +10,10 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>tcommonsrules</name>
-	<description></description>
+	<description>Library to support Rules in tScriptRules and tScriptRulesLoad Talend Open Studio components</description>
 	<organization>
-		<name>Bekwam, Inc.</name>
-		<url>http://www.bekwam.com</url>
+		<name>Bekwam.org</name>
+		<url>http://www.bekwam.org</url>
 	</organization>
 	<build>
 	

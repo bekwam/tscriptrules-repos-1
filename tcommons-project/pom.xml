@@ -12,8 +12,8 @@
 	<name>tcommons</name>
 	<description>A library supporting the tScriptRules and tScriptRulesLoad components</description>
 	<organization>
-		<name>Bekwam, Inc.</name>
-		<url>http://www.bekwam.com</url>
+		<name>Bekwam.org</name>
+		<url>http://www.bekwam.org</url>
 	</organization>
 	<build>
 	
