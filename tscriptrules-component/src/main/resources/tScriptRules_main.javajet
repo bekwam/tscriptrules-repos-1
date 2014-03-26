@@ -1,0 +1,81 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.process.BlockCode
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType
+		java.util.List 
+    	java.util.Map
+	" 
+%>
+
+<% 
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	    
+%>
+
+<%
+    List<IMetadataTable> metadatas = node.getMetadataList();
+    IMetadataTable metadata = metadatas.get(0);
+    
+    List< ? extends IConnection > in_conns = node.getIncomingConnections();
+	List< ? extends IConnection > filter_conns = node.getOutgoingConnections("FILTER");
+	List< ? extends IConnection > reject_conns = node.getOutgoingConnections("REJECT");
+	
+    String inputRowName = null;    
+	if(in_conns!=null && in_conns.size()>0){
+		IConnection in_conn = in_conns.get(0);
+		inputRowName = in_conn.getName();
+	}
+
+	String filterRowName = null;
+	if( filter_conns!=null && filter_conns.size()>0) {
+		IConnection filter_c = filter_conns.get(0);
+		filterRowName = filter_c.getName();
+	}
+	
+	String rejectRowName = null;
+	if( reject_conns != null && reject_conns.size() > 0) {
+		IConnection reject_c = reject_conns.get(0);
+		rejectRowName = reject_c.getName();
+	}
+%>
+
+com.bekwam.talend.component.scriptrules.Result result_<%= cid %> = 
+	rulesBean_<%= cid %>.process(<%= inputRowName %>,
+								<%= filterRowName %>,
+								<%= rejectRowName %>,
+								counter_<%= cid %>);
+
+for( com.bekwam.talend.component.scriptrules.Loopable loopable_<%= cid %> : result_<%= cid %>.getLoopables() ) { // R_01
+	
+	<%
+		if( filterRowName != null ) { 
+		%>
+		<%= filterRowName %> = (<%= filterRowName %>Struct)result_<%= cid %>.getFilterRow();
+	<%
+		}
+	%>
+
+	<%
+		if( rejectRowName != null ) { 
+		%>
+		<%= rejectRowName %> = (<%= rejectRowName %>Struct)result_<%= cid %>.getRejectRow();
+		
+		rulesBean_<%= cid %>.setRejectFields( result_<%= cid %>, loopable_<%= cid %> );
+	<%
+		}
+		%>
+	
+<%
+	List<BlockCode> blockCodes = new java.util.ArrayList<BlockCode>(1);
+	blockCodes.add(new BlockCode("R_01"));
+	((org.talend.core.model.process.AbstractNode) node).setBlocksCodeToClose(blockCodes);	
+%>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<COMPONENT>
+    <HEADER AUTHOR="Bekwam, Inc." COMPATIBILITY="ALL" DATA_AUTO_PROPAGATE="false" PLATEFORM="ALL" RELEASE_DATE="20121123" SERIAL="" STARTABLE="false" STATUS="RELEASE" VERSION="2.0" HAS_CONDITIONAL_OUTPUTS="true">
+        <SIGNATURE />
+    </HEADER>
+    <FAMILIES>
+        <FAMILY>Processing</FAMILY>
+    </FAMILIES>
+    <DOCUMENTATION>
+        <URL>http://www.bekwam.com</URL>
+    </DOCUMENTATION>
+    <CONNECTORS>
+        <CONNECTOR CTYPE="FLOW" MAX_INPUT="1" MAX_OUTPUT="0" />
+        <CONNECTOR NAME="FILTER" CTYPE="FLOW" MAX_OUTPUT="1" COLOR="086438" BASE_SCHEMA="FLOW" />
+        <CONNECTOR NAME="REJECT" CTYPE="FLOW" MAX_OUTPUT="1" LINE_STYLE="2" COLOR="f36300" BASE_SCHEMA="FLOW" />
+    </CONNECTORS>
+    <PARAMETERS>
+
+        <PARAMETER FIELD="SCHEMA_TYPE" NAME="SCHEMA" NUM_ROW="1" REQUIRED="true" READONLY="true" />
+
+        <PARAMETER NAME="SCHEMA_FILTER" FIELD="SCHEMA_TYPE" NUM_ROW="1" CONTEXT="FILTER" />
+
+		<PARAMETER NAME="USE_EXISTING_RULE_LIST" FIELD="CHECK" NUM_ROW="2">
+      		<DEFAULT>false</DEFAULT>
+    	</PARAMETER>    
+        
+    	<PARAMETER NAME="RULE_LIST" FIELD="COMPONENT_LIST" FILTER="tScriptRulesLoad" NUM_ROW="3" SHOW_IF="USE_EXISTING_RULE_LIST == 'true'" DYNAMIC_SETTINGS="true" REQUIRED="true" />
+
+        <PARAMETER FIELD="TABLE" NAME="RULES" NUM_ROW="3" NB_LINES="5" SHOW_IF="USE_EXISTING_RULE_LIST == 'false'">
+            <ITEMS>
+                <ITEM NAME="EXPRESSION" VALUE="" FIELD="MEMO_JAVA"></ITEM>
+                <ITEM NAME="REASON_CODE" VALUE='""'></ITEM>
+                <ITEM NAME="REASON_MESSAGE" VALUE='""'></ITEM>
+            </ITEMS>
+        </PARAMETER>
+        
+        <PARAMETER NAME="SCHEMA_REJECT" FIELD="SCHEMA_TYPE" REQUIRED="true" NUM_ROW="4" CONTEXT="REJECT" SHOW="true">
+            <TABLE READONLY="true">
+                <COLUMN NAME="reasonCode" TYPE="id_String" LENGTH="255" READONLY="false" CUSTOM="true" />
+                <COLUMN NAME="reasonMessage" TYPE="id_String" LENGTH="255" READONLY="false" CUSTOM="true" />
+            </TABLE>
+        </PARAMETER>
+        
+    </PARAMETERS>
+    <ADVANCED_PARAMETERS>
+        <PARAMETER FIELD="CHECK" NAME="RUN_ALL" NUM_ROW="1" DYNAMIC_SETTINGS="true">
+            <DEFAULT>false</DEFAULT>
+        </PARAMETER>
+    </ADVANCED_PARAMETERS>
+    <CODEGENERATION>
+        <IMPORTS>
+            <IMPORT MODULE="tscriptrules-2.0.1.jar" NAME="TScriptRules" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="tcommonsrules-1.0.jar" NAME="TCommonsRules" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="tcommons-1.0.jar" NAME="TCommons" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="commons-collections-3.2.1.jar" NAME="Commons Collections" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="commons-jexl-2.1.1.jar" NAME="Commons JEXL" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="commons-lang-2.6.jar" NAME="Commons Lang" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="commons-beanutils-core-1.8.3.jar" NAME="Commons Beanutils" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="commons-logging-1.1.1.jar" NAME="Commons Logging" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="log4j-1.2.17.jar" NAME="Log4J" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="guice-with-deps.jar" NAME="Guice 3.0 No AOP REQUIRED" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="javax.inject.jar" NAME="Javax Inject" REQUIRED="true"></IMPORT>
+        </IMPORTS>
+    </CODEGENERATION>
+    <RETURNS>
+        <RETURN AVAILABILITY="AFTER" NAME="NB_LINE" TYPE="id_Integer" />
+        <RETURN AVAILABILITY="AFTER" NAME="NB_LINE_OK" TYPE="id_Integer" />
+        <RETURN AVAILABILITY="AFTER" NAME="NB_LINE_REJECT" TYPE="id_Integer" />
+    </RETURNS>
+</COMPONENT>
