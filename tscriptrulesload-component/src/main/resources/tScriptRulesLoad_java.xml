@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<COMPONENT> 
+  <HEADER AUTHOR="Bekwam.org" COMPATIBILITY="ALL" DATA_AUTO_PROPAGATE="false" PLATEFORM="ALL" RELEASE_DATE="@TIMESTAMP@" SERIAL="" STARTABLE="false" STATUS="RELEASE" VERSION="@PROJECT_VERSION@" HAS_CONDITIONAL_OUTPUTS="true"> 
+    <SIGNATURE/> 
+  </HEADER>  
+  <FAMILIES> 
+    <FAMILY>Misc</FAMILY> 
+  </FAMILIES>  
+  <DOCUMENTATION> 
+    <URL>http://www.bekwam.org</URL> 
+  </DOCUMENTATION>  
+  <CONNECTORS>
+		<CONNECTOR CTYPE="FLOW" MAX_INPUT="1" MAX_OUTPUT="1"/>
+		<CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="0" MAX_INPUT="0"/>
+		<CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" />
+		<CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" />
+		<CONNECTOR CTYPE="COMPONENT_OK"/>
+		<CONNECTOR CTYPE="COMPONENT_ERROR"/>
+		<CONNECTOR CTYPE="RUN_IF"/>
+  </CONNECTORS>  
+  <PARAMETERS>  
+    <PARAMETER
+      NAME="SCHEMA"
+      FIELD="SCHEMA_TYPE"
+      REQUIRED="true"
+      NUM_ROW="1">
+      <TABLE READONLY="true">
+        <COLUMN NAME="jexlExpression" TYPE="id_String" READONLY="true" CUSTOM="true" LENGTH="255"/>
+        <COLUMN NAME="reasonCode" TYPE="id_String" READONLY="false" CUSTOM="true" LENGTH="255"/>
+        <COLUMN NAME="reasonMessage" TYPE="id_String" READONLY="false" CUSTOM="true" LENGTH="255"/>
+      </TABLE>
+    </PARAMETER>
+  </PARAMETERS>
+  <ADVANCED_PARAMETERS> 
+	  <PARAMETER FIELD="CHECK" NAME="LENIENT" NUM_ROW="2" DYNAMIC_SETTINGS="true">
+	  	<DEFAULT>false</DEFAULT>
+	  </PARAMETER>
+  </ADVANCED_PARAMETERS>
+  <CODEGENERATION>
+  	<IMPORTS>
+  		<IMPORT MODULE="tscriptrulesload-@FULL_VERSION@.jar" NAME="TScriptRulesLoad" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="tcommonsrules-@FULL_VERSION@.jar" NAME="TCommonsRules" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="tcommons-@FULL_VERSION@.jar" NAME="TCommons" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="commons-collections-3.2.1.jar" NAME="Commons Collections" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="commons-jexl-2.1.1.jar" NAME="Commons JEXL" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="commons-lang-2.6.jar" NAME="Commons Lang" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="commons-beanutils-core-1.8.3.jar" NAME="Commons Beanutils" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="commons-logging-1.1.1.jar" NAME="Commons Logging" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="log4j-1.2.17.jar" NAME="Log4J" REQUIRED="true"></IMPORT>
+		<IMPORT MODULE="guice-3.0-no_aop.jar" NAME="Guice 3.0 No AOP REQUIRED" REQUIRED="true"></IMPORT>
+  		<IMPORT MODULE="javax.inject-1.jar" NAME="Javax Inject" REQUIRED="true"></IMPORT>
+  		</IMPORTS></CODEGENERATION>  
+  <RETURNS> 
+    <RETURN AVAILABILITY="AFTER" NAME="NB_LINE" TYPE="id_Integer"/>
+    <RETURN AVAILABILITY="AFTER" NAME="NB_LINE_OK" TYPE="id_Integer" />
+  	<RETURN AVAILABILITY="AFTER" NAME="NB_LINE_REJECT" TYPE="id_Integer" />
+  	<RETURN AVAILABILITY="FATER" NAME="RULE_LIST" TYPE="id_Object" />
+  </RETURNS> 
+</COMPONENT>

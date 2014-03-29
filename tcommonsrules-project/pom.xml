@@ -5,9 +5,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 		 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.bekwam</groupId>
 	<artifactId>tcommonsrules</artifactId>
-	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>tcommonsrules</name>
 	<description>Library to support Rules in tScriptRules and tScriptRulesLoad Talend Open Studio components</description>
@@ -85,7 +83,7 @@
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tcommons</artifactId>
-			<version>1.0.0</version>
+			<version>2.1.0</version>
 		</dependency>
 		
 		<dependency>
@@ -125,8 +123,9 @@
 	</ciManagement>
 	<url>http://www.bekwam.org</url>
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<groupId>org.bekwam</groupId>
+		<artifactId>tscriptrules-parent</artifactId>
+		<version>2.1.0</version>
+		<relativePath>../tscriptrules-parent/pom.xml</relativePath>
 	</parent>
 </project>

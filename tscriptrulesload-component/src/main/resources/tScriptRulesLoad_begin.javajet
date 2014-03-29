@@ -1,0 +1,52 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType
+		java.util.List 
+    	java.util.Map		
+	" 
+%>
+<% 
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	
+    
+    %>
+
+Boolean lenient_<%= cid %> = false;
+
+<%
+	if( node.getElementParameter("LENIENT").isContextMode() ) {
+%>
+		lenient_<%= cid %> = <%= ElementParameterParser.getValue(node, "__LENIENT__") %>;
+<%
+    } else {
+		if ( ElementParameterParser.getValue(node, "__LENIENT__").equals("true") ) {
+%>
+			lenient_<%= cid %> = true;  // not from context
+<%
+		}
+	}
+%>
+
+com.google.inject.Injector injector_<%= cid %> =
+	com.google.inject.Guice.createInjector(
+		new org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadModule(
+			"jexlExpression",
+			"reasonCode",
+			"reasonMessage",
+			lenient_<%= cid %>)
+		);
+
+org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean loadBean_<%= cid %> = 
+	injector_<%= cid %>.getInstance(org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean.class);
+	
+// initial Counter object (0,0,0)
+org.bekwam.talend.commons.Counter counter_<%= cid %> = new org.bekwam.talend.commons.Counter();

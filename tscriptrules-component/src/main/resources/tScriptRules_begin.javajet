@@ -1,0 +1,160 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.metadata.types.JavaTypesManager
+		org.talend.core.model.metadata.types.JavaType
+		java.util.List 
+    	java.util.Map		
+	" 
+%>
+<% 
+    CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+    INode node = (INode)codeGenArgument.getArgument();
+    String cid = node.getUniqueName();	
+    
+    %>
+
+<%
+    List< ? extends IConnection > in_conns = node.getIncomingConnections();
+	List< ? extends IConnection > filter_conns = node.getOutgoingConnections("FILTER");
+	List< ? extends IConnection > reject_conns = node.getOutgoingConnections("REJECT");
+
+    String inputRowName = null;    
+	if(in_conns!=null && in_conns.size()>0){
+		IConnection in_conn = in_conns.get(0);
+		inputRowName = in_conn.getName();
+	}
+
+	String filterRowName = null;
+	if( filter_conns!=null && filter_conns.size()>0) {
+		IConnection filter_c = filter_conns.get(0);
+		filterRowName = filter_c.getName();
+	}
+	
+	String rejectRowName = null;
+	if( reject_conns != null && reject_conns.size() > 0) {
+		IConnection reject_c = reject_conns.get(0);
+		rejectRowName = reject_c.getName();
+	}
+%>
+
+// ****************************************************************************************
+// Retrieve the runAll parameter
+// ****************************************************************************************
+Boolean runAll_<%= cid %> = false;
+
+<%
+	if( node.getElementParameter("RUN_ALL").isContextMode() ) {
+%>
+		runAll_<%= cid %> = <%= ElementParameterParser.getValue(node, "__RUN_ALL__") %>;
+<%
+    } else {
+		if ( ElementParameterParser.getValue(node, "__RUN_ALL__").equals("true") ) {
+%>
+			runAll_<%= cid %> = true;  // not from context
+<%
+		}
+	}
+	%>
+
+// ****************************************************************************************
+// Retrieve the useExistingRuleList parameter
+// ****************************************************************************************	
+Boolean useExistingRuleList_<%= cid %> = false;
+
+<%
+	if( node.getElementParameter("USE_EXISTING_RULE_LIST").isContextMode() ) {
+%>
+		useExistingRuleList_<%= cid %> = <%= ElementParameterParser.getValue(node, "__RUN_ALL__") %>;
+<%
+    } else {
+		if ( ElementParameterParser.getValue(node, "__USE_EXISTING_RULE_LIST__").equals("true") ) {
+%>
+			useExistingRuleList_<%= cid %> = true;  // not from context
+<%
+		}
+	}
+	%>
+
+// ****************************************************************************************
+// Retrieve the ruleList parameter
+// ****************************************************************************************	
+<%
+	String ruleList = ElementParameterParser.getValue(node, "__RULE_LIST__");
+%>
+// ruleList: <%= ruleList %>
+org.bekwam.talend.commonsrules.RuleList ruleList_<%= cid %> = null;
+
+if( useExistingRuleList_<%= cid %> ) {
+	// ruleList should not be empty so "null" doesn't matter
+	ruleList_<%= cid %> = (org.bekwam.talend.commonsrules.RuleList)globalMap.get( "<%= ruleList %>" + "_RULE_LIST" ); 
+}
+else {
+	ruleList_<%= cid %> = new org.bekwam.talend.commonsrules.RuleList();
+
+	// ****************************************************************************************
+	// Retrieve the rules parameter
+	// ****************************************************************************************	
+	<%
+		List<Map<String,String>> rules = 
+			(List<Map<String,String>>)ElementParameterParser.getObjectValue(node, "__RULES__");    			
+	%>
+
+	<%
+	for( Map<String, String> ruleEntry : rules ) {
+	%>
+		ruleList_<%= cid %>.addRule( 
+			new org.bekwam.talend.commonsrules.Rule(<%= ruleEntry.get("EXPRESSION") %>, <%= ruleEntry.get("REASON_CODE") %>, <%= ruleEntry.get("REASON_MESSAGE") %>) 
+			);	
+	<% 
+	} 
+	%>
+}
+
+//
+// Some sample objects that are used to initialize the Guice module
+// but that aren't affected by other components
+//
+Object sampleFilterRow_<%= cid %> = null;
+<%
+	if( filterRowName != null ) {
+		%>
+		sampleFilterRow_<%= cid %> = new <%= filterRowName %>Struct();
+<%
+	}
+	%>
+	
+Object sampleRejectRow_<%= cid %> = null;
+<%
+	if( rejectRowName != null ) {
+		%>
+		sampleRejectRow_<%= cid %> = new <%= rejectRowName %>Struct();
+<%
+	}
+	%>
+
+// end some sample objects
+
+com.google.inject.Injector injector_<%= cid %> =
+	com.google.inject.Guice.createInjector(
+		new org.bekwam.talend.component.scriptrules.ScriptRulesModule(
+			ruleList_<%= cid %>, 
+			runAll_<%= cid %>,
+			new org.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
+			new org.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
+			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>)
+			)
+		);
+
+org.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 
+	injector_<%= cid %>.getInstance(org.bekwam.talend.component.scriptrules.ScriptRulesBean.class);
+
+// initial Counter object (0,0,0)
+org.bekwam.talend.commons.Counter counter_<%= cid %> =
+	new org.bekwam.talend.commons.Counter();
