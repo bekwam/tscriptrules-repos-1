@@ -1,23 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.bekwam</groupId>
 	<artifactId>tscriptrules-component</artifactId>
-	<version>1.7.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<groupId>org.bekwam</groupId>
+		<artifactId>tscriptrules-parent</artifactId>
+		<version>2.1.0</version>
+		<relativePath>../tscriptrules-parent/pom.xml</relativePath>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<build>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -27,30 +24,6 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<formats>
-						<format>xml</format>
-						<format>html</format>
-					</formats>
-					<instrumentation>
-						<ignores>
-							<ignore>scratch.*</ignore>
-						</ignores>
-					</instrumentation>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>cobertura</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -69,7 +42,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -81,10 +53,49 @@
 							<goal>parse-version</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>timestamp-property</id>
+						<goals>
+							<goal>timestamp-property</goal>
+						</goals>
+						<configuration>
+							<name>ts</name>
+							<pattern>yyyyMMdd</pattern>  <!-- using GMT timezone -->
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.2</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.build.outputDirectory}/tScriptRules_java.xml</file>
+					<replacements>
+						<replacement>
+							<token>@PROJECT_VERSION@</token>
+							<value>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</value>
+						</replacement>
+						<replacement>
+							<token>@FULL_VERSION@</token>
+							<value>${project.version}</value>
+						</replacement>
+						<replacement>
+							<token>@TIMESTAMP@</token>
+							<value>${ts}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
 		</plugins>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -107,6 +118,27 @@
 										<ignore />
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.8,)
+										</versionRange>
+										<goals>
+											<goal>
+												timestamp-property
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -114,8 +146,8 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
-		<dependencies>
+
+	<dependencies>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -150,35 +182,35 @@
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 			<version>3.0</version>
+			<classifier>no_aop</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tcommons</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tcommonsrules</artifactId>
-			<version>1.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tscriptrules</artifactId>
-			<version>2.0.1</version>
-		</dependency>
-		
-		<dependency>
-    		<groupId>commons-logging</groupId>
-    		<artifactId>commons-logging-adapters</artifactId>
-    		<version>1.1</version>
-    		<scope>test</scope>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-    		<groupId>log4j</groupId>
-    		<artifactId>log4j</artifactId>
-    		<version>1.2.17</version>
-    		<scope>test</scope>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging-adapters</artifactId>
+			<version>1.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
 
 		<dependency>
@@ -187,12 +219,12 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.jmock</groupId>
-    		<artifactId>jmock-legacy</artifactId>
-    		<version>2.5.1</version>
-    		<scope>test</scope>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-legacy</artifactId>
+			<version>2.5.1</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -201,11 +233,9 @@
 			<version>2.5.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
-	
-	<name>BRules</name>
-	<description>A collection of routines for use in Talend Open Studio</description>
+
 	<url>http://www.bekwam.org</url>
 	<licenses>
 		<license>
@@ -234,4 +264,6 @@
 		<system>CloudBees - Jenkins</system>
 		<url>http://www.getdonedone.com/</url>
 	</ciManagement>
+	<name>tscriptrules-component</name>
+	<description>A Talend Open Studio Component called tScriptRules that applies a list of conditions to an input filter using a script-like syntax</description>
 </project>

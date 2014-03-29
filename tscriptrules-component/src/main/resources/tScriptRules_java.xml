@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT>
-    <HEADER AUTHOR="Bekwam, Inc." COMPATIBILITY="ALL" DATA_AUTO_PROPAGATE="false" PLATEFORM="ALL" RELEASE_DATE="20121123" SERIAL="" STARTABLE="false" STATUS="RELEASE" VERSION="2.0" HAS_CONDITIONAL_OUTPUTS="true">
+    <HEADER AUTHOR="Bekwam.org" COMPATIBILITY="ALL" DATA_AUTO_PROPAGATE="false" PLATEFORM="ALL" RELEASE_DATE="@TIMESTAMP@" SERIAL="" STARTABLE="false" STATUS="RELEASE" VERSION="@PROJECT_VERSION@" HAS_CONDITIONAL_OUTPUTS="true">
         <SIGNATURE />
     </HEADER>
     <FAMILIES>
         <FAMILY>Processing</FAMILY>
     </FAMILIES>
     <DOCUMENTATION>
-        <URL>http://www.bekwam.com</URL>
+        <URL>http://www.bekwam.org</URL>
     </DOCUMENTATION>
     <CONNECTORS>
         <CONNECTOR CTYPE="FLOW" MAX_INPUT="1" MAX_OUTPUT="0" />
@@ -50,17 +50,17 @@
     </ADVANCED_PARAMETERS>
     <CODEGENERATION>
         <IMPORTS>
-            <IMPORT MODULE="tscriptrules-2.0.1.jar" NAME="TScriptRules" REQUIRED="true"></IMPORT>
-            <IMPORT MODULE="tcommonsrules-1.0.jar" NAME="TCommonsRules" REQUIRED="true"></IMPORT>
-            <IMPORT MODULE="tcommons-1.0.jar" NAME="TCommons" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="tscriptrules-@FULL_VERSION@.jar" NAME="TScriptRules" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="tcommonsrules-@FULL_VERSION@.jar" NAME="TCommonsRules" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="tcommons-@FULL_VERSION@.jar" NAME="TCommons" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="commons-collections-3.2.1.jar" NAME="Commons Collections" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="commons-jexl-2.1.1.jar" NAME="Commons JEXL" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="commons-lang-2.6.jar" NAME="Commons Lang" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="commons-beanutils-core-1.8.3.jar" NAME="Commons Beanutils" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="commons-logging-1.1.1.jar" NAME="Commons Logging" REQUIRED="true"></IMPORT>
             <IMPORT MODULE="log4j-1.2.17.jar" NAME="Log4J" REQUIRED="true"></IMPORT>
-            <IMPORT MODULE="guice-with-deps.jar" NAME="Guice 3.0 No AOP REQUIRED" REQUIRED="true"></IMPORT>
-            <IMPORT MODULE="javax.inject.jar" NAME="Javax Inject" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="guice-3.0-no_aop.jar" NAME="Guice 3.0 No AOP REQUIRED" REQUIRED="true"></IMPORT>
+            <IMPORT MODULE="javax.inject-1.jar" NAME="Javax Inject" REQUIRED="true"></IMPORT>
         </IMPORTS>
     </CODEGENERATION>
     <RETURNS>
