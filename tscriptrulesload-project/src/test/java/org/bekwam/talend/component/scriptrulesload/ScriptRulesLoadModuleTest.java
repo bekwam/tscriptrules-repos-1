@@ -1,8 +1,8 @@
 package org.bekwam.talend.component.scriptrulesload;
 
+import org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadModule;
 import org.junit.Test;
 
-import com.bekwam.talend.component.scriptrulesload.ScriptRulesLoadModule;
 
 public class ScriptRulesLoadModuleTest {
 

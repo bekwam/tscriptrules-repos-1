@@ -38,15 +38,15 @@ Boolean lenient_<%= cid %> = false;
 
 com.google.inject.Injector injector_<%= cid %> =
 	com.google.inject.Guice.createInjector(
-		new com.bekwam.talend.component.scriptrulesload.ScriptRulesLoadModule(
+		new org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadModule(
 			"jexlExpression",
 			"reasonCode",
 			"reasonMessage",
 			lenient_<%= cid %>)
 		);
 
-com.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean loadBean_<%= cid %> = 
-	injector_<%= cid %>.getInstance(com.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean.class);
+org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean loadBean_<%= cid %> = 
+	injector_<%= cid %>.getInstance(org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean.class);
 	
 // initial Counter object (0,0,0)
-com.bekwam.talend.commons.Counter counter_<%= cid %> = new com.bekwam.talend.commons.Counter();
+org.bekwam.talend.commons.Counter counter_<%= cid %> = new org.bekwam.talend.commons.Counter();

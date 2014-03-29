@@ -4,6 +4,7 @@ import org.bekwam.talend.commonsrules.Rule;
 import org.bekwam.talend.commonsrules.RuleList;
 import org.bekwam.talend.commonsrules.ScriptRulesValidationException;
 import org.bekwam.talend.commonsrules.ScriptRulesValidator;
+import org.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean;
 import org.bekwam.talend.component.scriptrulesload.schema.row1Struct;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -14,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 import org.bekwam.talend.commons.Counter;
-import com.bekwam.talend.component.scriptrulesload.ScriptRulesLoadBean;
 
 public class ScriptRulesLoadBeanTest {
 

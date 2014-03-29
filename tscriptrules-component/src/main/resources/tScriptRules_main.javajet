@@ -48,13 +48,13 @@
 	}
 %>
 
-com.bekwam.talend.component.scriptrules.Result result_<%= cid %> = 
+org.bekwam.talend.component.scriptrules.Result result_<%= cid %> = 
 	rulesBean_<%= cid %>.process(<%= inputRowName %>,
 								<%= filterRowName %>,
 								<%= rejectRowName %>,
 								counter_<%= cid %>);
 
-for( com.bekwam.talend.component.scriptrules.Loopable loopable_<%= cid %> : result_<%= cid %>.getLoopables() ) { // R_01
+for( org.bekwam.talend.component.scriptrules.Loopable loopable_<%= cid %> : result_<%= cid %>.getLoopables() ) { // R_01
 	
 	<%
 		if( filterRowName != null ) { 

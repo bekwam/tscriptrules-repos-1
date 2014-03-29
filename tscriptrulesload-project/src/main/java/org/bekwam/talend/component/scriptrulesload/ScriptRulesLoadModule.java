@@ -1,4 +1,4 @@
-package com.bekwam.talend.component.scriptrulesload;
+package org.bekwam.talend.component.scriptrulesload;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;

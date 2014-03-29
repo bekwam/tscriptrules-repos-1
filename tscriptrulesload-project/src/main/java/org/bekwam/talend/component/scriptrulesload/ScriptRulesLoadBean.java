@@ -1,4 +1,4 @@
-package com.bekwam.talend.component.scriptrulesload;
+package org.bekwam.talend.component.scriptrulesload;
 
 import javax.inject.Inject;
 import javax.inject.Named;

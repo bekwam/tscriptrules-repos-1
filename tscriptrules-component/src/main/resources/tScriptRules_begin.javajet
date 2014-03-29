@@ -89,14 +89,14 @@ Boolean useExistingRuleList_<%= cid %> = false;
 	String ruleList = ElementParameterParser.getValue(node, "__RULE_LIST__");
 %>
 // ruleList: <%= ruleList %>
-com.bekwam.talend.commonsrules.RuleList ruleList_<%= cid %> = null;
+org.bekwam.talend.commonsrules.RuleList ruleList_<%= cid %> = null;
 
 if( useExistingRuleList_<%= cid %> ) {
 	// ruleList should not be empty so "null" doesn't matter
-	ruleList_<%= cid %> = (com.bekwam.talend.commonsrules.RuleList)globalMap.get( "<%= ruleList %>" + "_RULE_LIST" ); 
+	ruleList_<%= cid %> = (org.bekwam.talend.commonsrules.RuleList)globalMap.get( "<%= ruleList %>" + "_RULE_LIST" ); 
 }
 else {
-	ruleList_<%= cid %> = new com.bekwam.talend.commonsrules.RuleList();
+	ruleList_<%= cid %> = new org.bekwam.talend.commonsrules.RuleList();
 
 	// ****************************************************************************************
 	// Retrieve the rules parameter
@@ -110,7 +110,7 @@ else {
 	for( Map<String, String> ruleEntry : rules ) {
 	%>
 		ruleList_<%= cid %>.addRule( 
-			new com.bekwam.talend.commonsrules.Rule(<%= ruleEntry.get("EXPRESSION") %>, <%= ruleEntry.get("REASON_CODE") %>, <%= ruleEntry.get("REASON_MESSAGE") %>) 
+			new org.bekwam.talend.commonsrules.Rule(<%= ruleEntry.get("EXPRESSION") %>, <%= ruleEntry.get("REASON_CODE") %>, <%= ruleEntry.get("REASON_MESSAGE") %>) 
 			);	
 	<% 
 	} 
@@ -143,18 +143,18 @@ Object sampleRejectRow_<%= cid %> = null;
 
 com.google.inject.Injector injector_<%= cid %> =
 	com.google.inject.Guice.createInjector(
-		new com.bekwam.talend.component.scriptrules.ScriptRulesModule(
+		new org.bekwam.talend.component.scriptrules.ScriptRulesModule(
 			ruleList_<%= cid %>, 
 			runAll_<%= cid %>,
-			new com.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
-			new com.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
-			new com.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>)
+			new org.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
+			new org.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
+			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>)
 			)
 		);
 
-com.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 
-	injector_<%= cid %>.getInstance(com.bekwam.talend.component.scriptrules.ScriptRulesBean.class);
+org.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 
+	injector_<%= cid %>.getInstance(org.bekwam.talend.component.scriptrules.ScriptRulesBean.class);
 
 // initial Counter object (0,0,0)
-com.bekwam.talend.commons.Counter counter_<%= cid %> =
-	new com.bekwam.talend.commons.Counter();
+org.bekwam.talend.commons.Counter counter_<%= cid %> =
+	new org.bekwam.talend.commons.Counter();
