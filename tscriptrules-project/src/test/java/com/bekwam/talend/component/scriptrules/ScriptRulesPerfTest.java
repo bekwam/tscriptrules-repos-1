@@ -1,5 +1,8 @@
 package com.bekwam.talend.component.scriptrules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bekwam.talend.commonsrules.Rule;
 import org.bekwam.talend.commonsrules.RuleList;
 import org.bekwam.talend.component.scriptrules.ScriptRulesBean;
@@ -21,6 +24,17 @@ public class ScriptRulesPerfTest {
 	 */
 	public static void main(String[] args) {
 
+		List<String> routineClassNames = new ArrayList<String>();
+		
+		routineClassNames.add( "DataOperation" );
+		routineClassNames.add( "Mathematical" );
+		routineClassNames.add( "Numeric" );
+		routineClassNames.add( "Relational" );
+		routineClassNames.add( "StringHandling" );
+		routineClassNames.add( "TalendDataGenerator" );
+		routineClassNames.add( "TalendDate" );
+		routineClassNames.add( "TalendString" );		
+
 		long start = System.currentTimeMillis();
 		
 		RuleList ruleList = new RuleList();
@@ -30,7 +44,7 @@ public class ScriptRulesPerfTest {
 		Connection filterConn = new Connection("row2", new row1Struct());
 		Connection rejectConn = new Connection("row3", new row3Struct());
 		
-		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn));
+		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames));
 		
 		ScriptRulesBean rulesBean = injector.getInstance(ScriptRulesBean.class);
 
