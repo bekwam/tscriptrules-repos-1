@@ -89,12 +89,12 @@
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tcommons</artifactId>
-			<version>2.1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bekwam</groupId>
 			<artifactId>tcommonsrules</artifactId>
-			<version>2.1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
