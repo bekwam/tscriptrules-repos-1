@@ -152,7 +152,7 @@ Object sampleRejectRow_<%= cid %> = null;
 //
 // #4 pull a list of system and user defined routines in classNames
 //
-String[] routineClassNames = new String[] {
+java.util.List<String> routineClassNames = new java.util.ArrayList<String>();
 
 <%
     IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
@@ -162,7 +162,7 @@ String[] routineClassNames = new String[] {
                     ERepositoryObjectType.ROUTINES);
         for (IRepositoryViewObject repositoryObj : all) {
             %>
-            	"<%= repositoryObj.getLabel() %>",
+routineClassNames.add("<%= repositoryObj.getLabel() %>");
             <%
 		}
 	} catch (PersistenceException e) {
@@ -170,7 +170,6 @@ String[] routineClassNames = new String[] {
 	}
 %>
 // end #4
-};
 
 com.google.inject.Injector injector_<%= cid %> =
 	com.google.inject.Guice.createInjector(
@@ -180,8 +179,7 @@ com.google.inject.Injector injector_<%= cid %> =
 			new org.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
 			new org.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
 			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>),
-			"mystring"
-			)
+			routineClassNames			)
 		);
 
 org.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 
