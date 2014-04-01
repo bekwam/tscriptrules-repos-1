@@ -11,6 +11,14 @@
 		org.talend.core.model.metadata.types.JavaType
 		java.util.List 
     	java.util.Map		
+	org.talend.core.model.repository.IRepositoryViewObject
+    	org.talend.repository.model.IProxyRepositoryFactory
+    	java.util.ArrayList
+    	org.talend.core.runtime.CoreRuntimePlugin
+    	org.talend.repository.ProjectManager
+    	org.talend.core.model.repository.ERepositoryObjectType
+    	org.talend.commons.exception.ExceptionHandler
+    	org.talend.commons.exception.PersistenceException
 	" 
 %>
 <% 
@@ -141,6 +149,28 @@ Object sampleRejectRow_<%= cid %> = null;
 
 // end some sample objects
 
+//
+// #4 pull a list of system and user defined routines in classNames
+//
+java.util.List<String> routineClassNames = new java.util.ArrayList<String>();
+
+<%
+    IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
+
+    try {
+    	List<IRepositoryViewObject> all = factory.getAll(ProjectManager.getInstance().getCurrentProject(),
+                    ERepositoryObjectType.ROUTINES);
+        for (IRepositoryViewObject repositoryObj : all) {
+            %>
+routineClassNames.add("<%= repositoryObj.getLabel() %>");
+            <%
+		}
+	} catch (PersistenceException e) {
+    	ExceptionHandler.process(e);
+	}
+%>
+// end #4
+
 com.google.inject.Injector injector_<%= cid %> =
 	com.google.inject.Guice.createInjector(
 		new org.bekwam.talend.component.scriptrules.ScriptRulesModule(
@@ -148,8 +178,8 @@ com.google.inject.Injector injector_<%= cid %> =
 			runAll_<%= cid %>,
 			new org.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
 			new org.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
-			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>)
-			)
+			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>),
+			routineClassNames			)
 		);
 
 org.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 

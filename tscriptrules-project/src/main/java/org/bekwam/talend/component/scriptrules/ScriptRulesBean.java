@@ -49,6 +49,9 @@ final public class ScriptRulesBean {
 
 	final private static String MESSAGE_INVALID_RULES           = "Error creating rulesBean with invalidRules=";
 	final private static String MESSAGE_INVALID_CONN            = "Error creating rulesBean with invalid conn=";
+	final private static String ROUTINES_PACKAGE                = "routines";
+	
+	final private List<String> routineClassNames = new ArrayList<String>();
 	
 	private Map<String, Expression> exprCache = new HashMap<String, Expression>();
 	
@@ -63,13 +66,16 @@ final public class ScriptRulesBean {
 						   @Named("RunAllMode") Boolean runAllMode,
 						   @Named("Input") Connection inputConn, 
 						   @Named("Filter") Connection filterConn, 
-						   @Named("Reject") Connection rejectConn) throws ScriptRulesValidationException {
+						   @Named("Reject") Connection rejectConn,
+						   List<String> routineClassNames) throws ScriptRulesValidationException {
 		
 		if( logger.isDebugEnabled() ) {
 			logger.debug("Constructor; validator=" + validator + ", jexl=" + 
 						jexl + ", ruleList=" + ruleList + ", inputConn=" + 
 						inputConn + ", filterConn=" + filterConn + 
-						", rejectConn=" + rejectConn + ", runAllMode=" + runAllMode + ", rejectFieldsVisitor=" + rejectFieldsVisitor);
+						", rejectConn=" + rejectConn + ", runAllMode=" + 
+						runAllMode + ", rejectFieldsVisitor=" + 
+						rejectFieldsVisitor + ", routineClassNames=" + routineClassNames);
 		}
 
 		RuleList invalidRuleList = validator.validateRuleList(ruleList);
@@ -108,6 +114,7 @@ final public class ScriptRulesBean {
 			fillFieldCache( rejectConn.getConnClass(), rejectFieldCache );
 		}
 
+		this.routineClassNames.addAll( routineClassNames );
 	}
 
 	private Map<String, Field> inputFieldCache = new HashMap<String, Field>();
@@ -140,6 +147,18 @@ final public class ScriptRulesBean {
 			context.set(inputConn.getConnName(), inputRow);
 			context.set("input_row", inputRow);  // alias
 
+			//
+			// #4 Add objects in context to allow calling static methods
+			//
+			for( String cn : routineClassNames ) {
+				try {
+					context.set( cn, Class.forName( ROUTINES_PACKAGE + "." + cn ) );
+				} catch(Exception exc) {
+					logger.warn("error adding routine to context", exc);
+				}
+			}
+			// end #4
+			
 			for (Rule rule : ruleList.getRules()) {
 				Expression e = exprCache.get(rule.getJexlExpression());
 				Object o = e.evaluate(context);

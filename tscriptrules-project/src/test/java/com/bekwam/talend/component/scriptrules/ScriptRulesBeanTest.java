@@ -1,6 +1,11 @@
 package com.bekwam.talend.component.scriptrules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.jexl2.JexlEngine;
+import org.bekwam.talend.commons.Connection;
+import org.bekwam.talend.commons.Counter;
 import org.bekwam.talend.commonsrules.Rule;
 import org.bekwam.talend.commonsrules.RuleList;
 import org.bekwam.talend.commonsrules.ScriptRulesValidationException;
@@ -14,8 +19,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 
-import org.bekwam.talend.commons.Connection;
-import org.bekwam.talend.commons.Counter;
 import com.bekwam.talend.component.scriptrules.schema.row1Struct;
 import com.bekwam.talend.component.scriptrules.schema.row4Struct;
 import com.bekwam.talend.component.scriptrules.schema.row5Struct;
@@ -36,25 +39,10 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
     private ScriptRulesValidator validator;
     private JexlEngine jexl;
     private RejectFieldsVisitor rejectFieldsVisitor;
+    private List<String> routineClassNames = new ArrayList<String>();
     
     public ScriptRulesBeanTest() {}
     
-	/**
-	 * 
-	 * @param arg0
-	 */
-	public ScriptRulesBeanTest(String arg0){
-		super(arg0);
-	}
-
-	/**
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args){
-
-	}
-
 	/**
 	 * 
 	 * @exception Exception
@@ -65,6 +53,15 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 		validator = context.mock(ScriptRulesValidator.class);
 		jexl = new JexlEngine();  // mock this?
 		rejectFieldsVisitor = context.mock(RejectFieldsVisitor.class);
+		
+		routineClassNames.add( "DataOperation" );
+		routineClassNames.add( "Mathematical" );
+		routineClassNames.add( "Numeric" );
+		routineClassNames.add( "Relational" );
+		routineClassNames.add( "StringHandling" );
+		routineClassNames.add( "TalendDataGenerator" );
+		routineClassNames.add( "TalendDate" );
+		routineClassNames.add( "TalendString" );		
 	}
 
 	/**
@@ -93,7 +90,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).validateRuleList(ruleList); will(returnValue(invalidRuleList));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, null, null);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, null, null, routineClassNames);
 
 		context.assertIsSatisfied();
 		
@@ -120,7 +117,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).validateRuleList(ruleList); will(returnValue(invalidRuleList));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, null);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, null, routineClassNames);
 		
 		context.assertIsSatisfied();
 
@@ -151,7 +148,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).validateRuleList(ruleList); will(returnValue(invalidRuleList));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		context.assertIsSatisfied();
 
@@ -182,7 +179,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 		}});
 
 		try {
-			ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, null, null);
+			ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, null, null, routineClassNames);
 			fail();
 		}
 		catch(ScriptRulesValidationException exc) {
@@ -221,7 +218,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, row3, new Counter());
 
@@ -270,7 +267,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, row3, new Counter());
 
@@ -320,7 +317,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, row3, new Counter());
 
@@ -368,7 +365,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, true, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, true, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, row3, new Counter());
 
@@ -417,7 +414,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, row3, new Counter());
 
@@ -471,7 +468,7 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).isValid(inputConn); will(returnValue(true));
 		}});
 
-		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, null);
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, false, inputConn, filterConn, null, routineClassNames);
 		
 		Result result = rulesBean.process(row1, row2, null, new Counter());
 
