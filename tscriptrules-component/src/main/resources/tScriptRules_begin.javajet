@@ -17,7 +17,7 @@
     	org.talend.core.runtime.CoreRuntimePlugin
     	org.talend.repository.ProjectManager
     	org.talend.core.model.repository.ERepositoryObjectType
-    	org.talend.commons.exception.ExceptionHandler
+    	org.talend.commons.exception.CommonExceptionHandler
     	org.talend.commons.exception.PersistenceException
 	" 
 %>
@@ -166,7 +166,7 @@ routineClassNames.add("<%= repositoryObj.getLabel() %>");
             <%
 		}
 	} catch (PersistenceException e) {
-    	ExceptionHandler.process(e);
+		CommonExceptionHandler.process(e);
 	}
 %>
 // end #4
