@@ -1,5 +1,10 @@
 package com.bekwam.talend.component.scriptrules;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +23,8 @@ import org.bekwam.talend.component.scriptrules.Success;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.bekwam.talend.component.scriptrules.schema.row1Struct;
 import com.bekwam.talend.component.scriptrules.schema.row4Struct;
@@ -30,7 +37,7 @@ import com.bekwam.talend.component.scriptrules.schema.row6Struct;
  * @version 1.0
  * @created 28-Oct-2012 7:47:02 AM
  */
-public class ScriptRulesBeanTest extends junit.framework.TestCase {
+public class ScriptRulesBeanTest  {
 
 	private Mockery context = new Mockery() {{
         setImposteriser(ClassImposteriser.INSTANCE);
@@ -47,9 +54,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	 * 
 	 * @exception Exception
 	 */
-	protected void setUp()
-	  throws Exception{
-		super.setUp();
+    @Before
+	public void init() {
 		validator = context.mock(ScriptRulesValidator.class);
 		jexl = new JexlEngine();  // mock this?
 		rejectFieldsVisitor = context.mock(RejectFieldsVisitor.class);
@@ -65,18 +71,10 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	}
 
 	/**
-	 * 
-	 * @exception Exception
-	 */
-	protected void tearDown()
-	  throws Exception{
-		super.tearDown();
-	}
-
-	/**
 	 * Tests first form of constructor : input conn only
 	 */
-	final public void testConstructorInputOnly() throws ScriptRulesValidationException {
+    @Test
+	public void onstructorInputOnly() throws ScriptRulesValidationException {
 		
 		final RuleList ruleList = new RuleList();
 		
@@ -100,7 +98,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	/**
 	 * Tests second form of constructor : input and filter
 	 */
-	final public void testConstructorInputAndFilter() throws ScriptRulesValidationException {
+    @Test
+	public void constructorInputAndFilter() throws ScriptRulesValidationException {
 		
 		final RuleList ruleList = new RuleList();
 		
@@ -128,7 +127,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	/**
 	 * Tests third form of constructor : input, filter, and reject
 	 */
-	final public void testConstructorInputFilterAndReject() throws ScriptRulesValidationException {
+    @Test
+	public void constructorInputFilterAndReject() throws ScriptRulesValidationException {
 		
 		final RuleList ruleList = new RuleList();
 		
@@ -161,7 +161,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	 * Will log an error message
 	 */
 	@SuppressWarnings("unused")
-	final public void testBadRule() {
+	@Test(expected=ScriptRulesValidationException.class)
+	public void testBadRule() throws ScriptRulesValidationException {
 		
 		final RuleList ruleList = new RuleList();
 		
@@ -178,18 +179,13 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 			oneOf(validator).validateRuleList(ruleList); will(returnValue(invalidRuleList));
 		}});
 
-		try {
-			ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, Boolean.FALSE, inputConn, null, null, routineClassNames, Boolean.FALSE, Boolean.FALSE);
-			fail();
-		}
-		catch(ScriptRulesValidationException exc) {
-			
-		}
+		ScriptRulesBean rulesBean = new ScriptRulesBean(validator, jexl, rejectFieldsVisitor, ruleList, Boolean.FALSE, inputConn, null, null, routineClassNames, Boolean.FALSE, Boolean.FALSE);
 			
 		context.assertIsSatisfied();
 	}
 	
-	final public void testEval() throws ScriptRulesValidationException {
+	@Test
+	public void eval() throws ScriptRulesValidationException {
 		
 		final String jexlExpression1 = "row1.field1 == 'ok'";
 		final String jexlExpression2 = "row1.field1 != null";
@@ -239,7 +235,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 		assertNull( result.getRejectRow() );
 	}
 
-	final public void testEvalFail() throws ScriptRulesValidationException {
+	@Test
+	public void evalFail() throws ScriptRulesValidationException {
 		
 		final String jexlExpression = "row1.field1 == 'ok'";
 		
@@ -289,7 +286,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 
 	}
 
-	final public void testEvalSeveralOk() throws ScriptRulesValidationException {
+	@Test
+	public void evalSeveralOk() throws ScriptRulesValidationException {
 		
 		final String jexlExpression = "row1.field1 == 'ok'";
 		
@@ -338,7 +336,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 		assertNull( result.getRejectRow() );
 	}
 	
-	final public void testMultipleFailRunAll() throws ScriptRulesValidationException {
+	@Test
+	public void multipleFailRunAll() throws ScriptRulesValidationException {
 		
 		final String jexlExpression1 = "row1.field1 == 'ok'";
 		final String jexlExpression2 = "row1.field2 == 'ok'";
@@ -387,7 +386,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 		assertNotNull( result.getRejectRow() );
 	}
 	
-	final public void testMultipleFailProdMode() throws ScriptRulesValidationException {
+	@Test
+	public void multipleFailProdMode() throws ScriptRulesValidationException {
 		
 		final String jexlExpression1 = "row1.field1 == 'ok'";
 		final String jexlExpression2 = "row1.field2 == 'ok'";
@@ -441,7 +441,8 @@ public class ScriptRulesBeanTest extends junit.framework.TestCase {
 	 * 
 	 * @throws ScriptRulesValidationException
 	 */
-	final public void testEvalUpper() throws ScriptRulesValidationException {
+	@Test
+	public void evalUpper() throws ScriptRulesValidationException {
 		
 		final String jexlExpression1 = "row1.My_Field1 == 'ok'";
 		final String jexlExpression2 = "row1.My_Field1 != null";
