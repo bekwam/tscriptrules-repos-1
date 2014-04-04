@@ -23,19 +23,25 @@ final public class ScriptRulesModule extends AbstractModule {
 	private final Connection filterConn;
 	private final Connection rejectConn;
 	private final List<String> routineClassNames;
+	private final Boolean silent;
+	private final Boolean lenient;
 	
 	public ScriptRulesModule(RuleList ruleList, 
 		     				 Boolean runAllMode,
 		     				 Connection inputConn, 
 		     				 Connection filterConn, 
 		     				 Connection rejectConn,
-		     				 List<String> routineClassNames) {
+		     				 List<String> routineClassNames,
+		     				 Boolean silent,
+		     				 Boolean lenient) {
 		this.ruleList = ruleList;
 		this.runAllMode = runAllMode;
 		this.inputConn = inputConn;
 		this.filterConn = filterConn;
 		this.rejectConn = rejectConn;
 		this.routineClassNames = routineClassNames;
+		this.silent = silent;
+		this.lenient = lenient;
 	}
 
 	@Override
@@ -46,6 +52,8 @@ final public class ScriptRulesModule extends AbstractModule {
 		bind(Connection.class).annotatedWith(Names.named("Filter")).toInstance(filterConn);
 		bind(Connection.class).annotatedWith(Names.named("Reject")).toInstance(rejectConn);
 		bind(new TypeLiteral<List<String>>() {}).toInstance(routineClassNames);
+		bind(Boolean.class).annotatedWith(Names.named("Slient")).toInstance(silent);
+		bind(Boolean.class).annotatedWith(Names.named("Lenient")).toInstance(lenient);
 	}
 
 }

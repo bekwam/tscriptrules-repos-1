@@ -57,7 +57,7 @@ public class ScriptRulesFunctionalTest {
 			Connection filterConn = new Connection("row2", sampleRow2);
 			Connection rejectConn = new Connection("row3", sampleRow3);
 			
-			Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames));
+			Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames, Boolean.FALSE, Boolean.FALSE));
 			
 			ScriptRulesBean rulesBean = injector.getInstance(ScriptRulesBean.class);
 	

@@ -34,6 +34,6 @@ public class ScriptRulesModuleTest {
 		
 		RuleList ruleList = new RuleList();
 		
-		ScriptRulesModule module = new ScriptRulesModule(ruleList, false, inputConn, filterConn, rejectConn, routineClassNames);
+		ScriptRulesModule module = new ScriptRulesModule(ruleList, false, inputConn, filterConn, rejectConn, routineClassNames, Boolean.FALSE, Boolean.FALSE);
 	}
 }
