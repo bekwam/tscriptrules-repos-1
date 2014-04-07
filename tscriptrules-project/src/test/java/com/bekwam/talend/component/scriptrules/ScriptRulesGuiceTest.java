@@ -49,7 +49,7 @@ public class ScriptRulesGuiceTest {
 		Connection filterConn = new Connection("row2", row2);
 		Connection rejectConn = new Connection("row3", row3);
 		
-		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames));
+		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames, Boolean.FALSE, Boolean.FALSE));
 		
 		ScriptRulesBean rulesBean = injector.getInstance(ScriptRulesBean.class);
 

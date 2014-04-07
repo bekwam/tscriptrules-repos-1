@@ -44,7 +44,7 @@ public class ScriptRulesPerfTest {
 		Connection filterConn = new Connection("row2", new row1Struct());
 		Connection rejectConn = new Connection("row3", new row3Struct());
 		
-		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames));
+		Injector injector = Guice.createInjector(new ScriptRulesModule(ruleList, true, inputConn, filterConn, rejectConn, routineClassNames, Boolean.FALSE, Boolean.FALSE));
 		
 		ScriptRulesBean rulesBean = injector.getInstance(ScriptRulesBean.class);
 

@@ -17,7 +17,7 @@
     	org.talend.core.runtime.CoreRuntimePlugin
     	org.talend.repository.ProjectManager
     	org.talend.core.model.repository.ERepositoryObjectType
-    	org.talend.commons.exception.ExceptionHandler
+    	org.talend.commons.exception.CommonExceptionHandler
     	org.talend.commons.exception.PersistenceException
 	" 
 %>
@@ -66,6 +66,44 @@ Boolean runAll_<%= cid %> = false;
 		if ( ElementParameterParser.getValue(node, "__RUN_ALL__").equals("true") ) {
 %>
 			runAll_<%= cid %> = true;  // not from context
+<%
+		}
+	}
+	%>
+
+// ****************************************************************************************
+// Retrieve the runSilently parameter
+// ****************************************************************************************
+Boolean runSilently_<%= cid %> = false;
+
+<%
+	if( node.getElementParameter("RUN_SILENTLY").isContextMode() ) {
+%>
+		runSilently_<%= cid %> = <%= ElementParameterParser.getValue(node, "__RUN_SILENTLY__") %>;
+<%
+    } else {
+		if ( ElementParameterParser.getValue(node, "__RUN_SILENTLY__").equals("true") ) {
+%>
+			runSilently_<%= cid %> = true;  // not from context
+<%
+		}
+	}
+	%>
+
+// ****************************************************************************************
+// Retrieve the runLeniently parameter
+// ****************************************************************************************
+Boolean runLeniently_<%= cid %> = false;
+
+<%
+	if( node.getElementParameter("RUN_LENIENTLY").isContextMode() ) {
+%>
+		runLeniently_<%= cid %> = <%= ElementParameterParser.getValue(node, "__RUN_LENIENTLY__") %>;
+<%
+    } else {
+		if ( ElementParameterParser.getValue(node, "__RUN_LENIENTLY__").equals("true") ) {
+%>
+			runLeniently_<%= cid %> = true;  // not from context
 <%
 		}
 	}
@@ -166,7 +204,7 @@ routineClassNames.add("<%= repositoryObj.getLabel() %>");
             <%
 		}
 	} catch (PersistenceException e) {
-    	ExceptionHandler.process(e);
+		CommonExceptionHandler.process(e);
 	}
 %>
 // end #4
@@ -179,7 +217,9 @@ com.google.inject.Injector injector_<%= cid %> =
 			new org.bekwam.talend.commons.Connection("<%= inputRowName %>", <%= inputRowName %>), 
 			new org.bekwam.talend.commons.Connection("<%= filterRowName %>", sampleFilterRow_<%= cid %>), 
 			new org.bekwam.talend.commons.Connection("<%= rejectRowName %>", sampleRejectRow_<%= cid %>),
-			routineClassNames			)
+			routineClassNames,
+			runSilently_<%= cid %>,
+			runLeniently_<%= cid %>)
 		);
 
 org.bekwam.talend.component.scriptrules.ScriptRulesBean rulesBean_<%= cid %> = 

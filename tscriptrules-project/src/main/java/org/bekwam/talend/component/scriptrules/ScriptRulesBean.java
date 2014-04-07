@@ -55,6 +55,10 @@ final public class ScriptRulesBean {
 	
 	private Map<String, Expression> exprCache = new HashMap<String, Expression>();
 	
+	private Map<String, Field> inputFieldCache = new HashMap<String, Field>();
+	private Map<String, Field> filterFieldCache = new HashMap<String, Field>();
+	private Map<String, Field> rejectFieldCache = new HashMap<String, Field>();
+	
 	/**
 	 * Constructor
 	 */
@@ -67,7 +71,9 @@ final public class ScriptRulesBean {
 						   @Named("Input") Connection inputConn, 
 						   @Named("Filter") Connection filterConn, 
 						   @Named("Reject") Connection rejectConn,
-						   List<String> routineClassNames) throws ScriptRulesValidationException {
+						   List<String> routineClassNames,
+						   @Named("Slient") Boolean silent,
+						   @Named("Lenient") Boolean lenient) throws ScriptRulesValidationException {
 		
 		if( logger.isDebugEnabled() ) {
 			logger.debug("Constructor; validator=" + validator + ", jexl=" + 
@@ -75,7 +81,8 @@ final public class ScriptRulesBean {
 						inputConn + ", filterConn=" + filterConn + 
 						", rejectConn=" + rejectConn + ", runAllMode=" + 
 						runAllMode + ", rejectFieldsVisitor=" + 
-						rejectFieldsVisitor + ", routineClassNames=" + routineClassNames);
+						rejectFieldsVisitor + ", routineClassNames=" + routineClassNames 
+						+ ", silent=" + silent + ", lenient=" + lenient);
 		}
 
 		RuleList invalidRuleList = validator.validateRuleList(ruleList);
@@ -115,12 +122,15 @@ final public class ScriptRulesBean {
 		}
 
 		this.routineClassNames.addAll( routineClassNames );
+		
+		//
+		// [#2] use lenient to silence a warning when input field is null and
+		// mentioned in a rule
+		//
+		jexl.setSilent(silent);
+		jexl.setLenient(lenient);
 	}
 
-	private Map<String, Field> inputFieldCache = new HashMap<String, Field>();
-	private Map<String, Field> filterFieldCache = new HashMap<String, Field>();
-	private Map<String, Field> rejectFieldCache = new HashMap<String, Field>();
-	
 	private void fillFieldCache(Class<?> clazz, Map<String, Field> cache) {
 		for( Field f : clazz.getDeclaredFields() ) {
 			if( !f.isSynthetic() && Modifier.isPublic(f.getModifiers()) && !Modifier.isStatic(f.getModifiers())) {
